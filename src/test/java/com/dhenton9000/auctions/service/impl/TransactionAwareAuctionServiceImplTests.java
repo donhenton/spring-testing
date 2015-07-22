@@ -65,6 +65,7 @@ public class TransactionAwareAuctionServiceImplTests {
                         .values(1,"alpha", "99.99")
                         .values(2,"beta", "88.90")
                         .values(3,"gamma", "677.90")
+                        .values(4,"epsilon", "222.90")
                         .build()
         );
       
@@ -199,10 +200,21 @@ public class TransactionAwareAuctionServiceImplTests {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testDeleteForAuctionItems() {
+    public void testDeleteForAuctionItemsFailsIfInUse() {
 
         auctionService.deleteAuctionItem(1);
-        AuctionItem item = auctionService.getAuctionItem(1);
+        
+
+    }
+    
+    @Test 
+    public void testDeleteForAuctionItemsIfNotInUse() {
+
+        AuctionItem item = auctionService.getAuctionItem(4);
+        assertNotNull(item);
+        
+        auctionService.deleteAuctionItem(4);
+        item = auctionService.getAuctionItem(4);
         assertNull(item);
 
     }
